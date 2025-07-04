@@ -1,0 +1,43 @@
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+// External dependency interface
+interface ExternalApi {
+    String getData();
+}
+
+// Service that uses the external API
+class MyService {
+    private ExternalApi api;
+
+    public MyService(ExternalApi api) {
+        this.api = api;
+    }
+
+    public String fetchData() {
+        return api.getData();
+    }
+}
+
+// Test class
+public class MyServiceTest {
+
+    @Test
+    public void testVerifyInteraction() {
+        // Step 1: Create a mock
+        ExternalApi mockApi = Mockito.mock(ExternalApi.class);
+
+        // Stub getData to return some dummy data
+        when(mockApi.getData()).thenReturn("Some Data");
+
+        // Step 2: Create service and call method
+        MyService service = new MyService(mockApi);
+        service.fetchData();
+
+        // Step 3: Verify that getData() was called exactly once
+        verify(mockApi, times(1)).getData(); // Optional: times(1) is the default
+    }
+}
